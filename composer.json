@@ -38,5 +38,8 @@
                 "Mpyw\\EloquentHasByNonDependentSubquery\\EloquentHasByNonDependentSubqueryServiceProvider"
             ]
         }
+    },
+    "suggest": {
+        "mpyw/eloquent-has-by-join": "Provides simple JOIN queries that do not depend optimizers"
     }
 }
