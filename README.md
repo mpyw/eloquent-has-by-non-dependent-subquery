@@ -121,8 +121,8 @@ The first closure corresponds to `comments` and the second one corresponds to `a
 ```php
 Builder::hasByNonDependentSubquery(
     'comments.author',
-    fn (Builder $query) => $query->withTrashed(),
-    fn (Builder $query) => $query->whereKey(123)
+    fn (HasMany $query) => $query->withTrashed(),
+    fn (BelongsTo $query) => $query->whereKey(123)
 )
 ```
 
