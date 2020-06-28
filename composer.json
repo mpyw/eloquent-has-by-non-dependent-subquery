@@ -1,0 +1,42 @@
+{
+    "name": "mpyw/eloquent-has-by-non-dependent-subquery",
+    "description": "Convert has() and whereHas() constraints to non-dependent subqueries.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "mpyw",
+            "email": "ryosuke_i_628@yahoo.co.jp"
+        }
+    ],
+    "keywords": ["laravel", "eloquent", "has", "whereHas", "dependent", "laravel", "illuminate", "database", "query", "builder", "macro"],
+    "autoload": {
+        "psr-4": {
+            "Mpyw\\EloquentHasByNonDependentSubquery\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Mpyw\\EloquentHasByNonDependentSubquery\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": "^7.1",
+        "illuminate/database": "^5.8 || ^6.0 || ^7.0 || ^8.0",
+        "illuminate/support": "^5.8 || ^6.0 || ^7.0 || ^8.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^5.0",
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "php-coveralls/php-coveralls": "^2.1",
+        "nilportugues/sql-query-formatter": "^1.2",
+        "awobaz/compoships": "^2.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Mpyw\\EloquentHasByNonDependentSubquery\\EloquentHasByNonDependentSubqueryServiceProvider"
+            ]
+        }
+    }
+}
