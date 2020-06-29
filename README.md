@@ -60,12 +60,12 @@ $posts = Post::hasByNonDependentSubquery('comments')->get();
 ```
 
 ```sql
-select * from "posts"
-where "posts"."id" in (
-  select "comments"."post_id" from "comments"
-  where "comments"."deleted_at" is null
+select * from `posts`
+where `posts`.`id` in (
+  select `comments`.`post_id` from `comments`
+  where `comments`.`deleted_at` is null
 )
-and "posts"."deleted_at" is null
+and `posts`.`deleted_at` is null
 ```
 
 ## API
