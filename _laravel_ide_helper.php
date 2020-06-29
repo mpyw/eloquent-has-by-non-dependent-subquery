@@ -8,9 +8,9 @@ namespace Illuminate\Database\Eloquent
             /**
              * Convert has() and whereHas() constraints to non-dependent subqueries.
              *
-             * @param  string|string[]                       $relationMethod
-             * @param  callable[]|null[]                     $constraints
-             * @return \Illuminate\Database\Eloquent\Builder
+             * @param  string|string[]   $relationMethod
+             * @param  callable[]|null[] $constraints
+             * @return $this
              * @see \Mpyw\EloquentHasByNonDependentSubquery\HasByNonDependentSubqueryMacro
              */
             public function hasByNonDependentSubquery($relationMethod, ?callable ...$constraints)
@@ -21,9 +21,9 @@ namespace Illuminate\Database\Eloquent
             /**
              * Convert has() and whereHas() constraints to non-dependent subqueries.
              *
-             * @param  string|string[]                       $relationMethod
-             * @param  callable[]|null[]                     $constraints
-             * @return \Illuminate\Database\Eloquent\Builder
+             * @param  string|string[]   $relationMethod
+             * @param  callable[]|null[] $constraints
+             * @return $this
              * @see \Mpyw\EloquentHasByNonDependentSubquery\HasByNonDependentSubqueryMacro
              */
             public function orHasByNonDependentSubquery($relationMethod, ?callable ...$constraints)
@@ -34,9 +34,9 @@ namespace Illuminate\Database\Eloquent
             /**
              * Convert has() and whereHas() constraints to non-dependent subqueries.
              *
-             * @param  string|string[]                       $relationMethod
-             * @param  callable[]|null[]                     $constraints
-             * @return \Illuminate\Database\Eloquent\Builder
+             * @param  string|string[]   $relationMethod
+             * @param  callable[]|null[] $constraints
+             * @return $this
              * @see \Mpyw\EloquentHasByNonDependentSubquery\HasByNonDependentSubqueryMacro
              */
             public function doesntHaveByNonDependentSubquery($relationMethod, ?callable ...$constraints)
@@ -47,9 +47,9 @@ namespace Illuminate\Database\Eloquent
             /**
              * Convert has() and whereHas() constraints to non-dependent subqueries.
              *
-             * @param  string|string[]                       $relationMethod
-             * @param  callable[]|null[]                     $constraints
-             * @return \Illuminate\Database\Eloquent\Builder
+             * @param  string|string[]   $relationMethod
+             * @param  callable[]|null[] $constraints
+             * @return $this
              * @see \Mpyw\EloquentHasByNonDependentSubquery\HasByNonDependentSubqueryMacro
              */
             public function orDoesntHaveByNonDependentSubquery($relationMethod, ?callable ...$constraints)
