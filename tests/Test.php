@@ -2,13 +2,16 @@
 
 namespace Mpyw\EloquentHasByNonDependentSubquery\Tests;
 
+use DateTime;
 use DomainException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Str;
 use Mpyw\EloquentHasByNonDependentSubquery\EloquentHasByNonDependentSubqueryServiceProvider;
+use Mpyw\EloquentHasByNonDependentSubquery\ReflectionCallable;
 use Mpyw\EloquentHasByNonDependentSubquery\Tests\Models\Category;
 use Mpyw\EloquentHasByNonDependentSubquery\Tests\Models\Comment;
 use Mpyw\EloquentHasByNonDependentSubquery\Tests\Models\Post;
@@ -16,6 +19,8 @@ use Mpyw\EloquentHasByNonDependentSubquery\Tests\Models\Tag;
 use Mpyw\EloquentHasByNonDependentSubquery\Tests\Models\User;
 use NilPortugues\Sql\QueryFormatter\Formatter;
 use Orchestra\Testbench\TestCase as BaseTestCase;
+use ReflectionFunction;
+use ReflectionMethod;
 
 class Test extends BaseTestCase
 {
@@ -691,6 +696,34 @@ EOD
         );
     }
 
+    public function testAcceptBuilderArgument(): void
+    {
+        $this->assertQueryEquals(
+            <<<'EOD'
+            select
+                *
+            from
+                "comments"
+            where
+                "comments"."post_id" in (
+                    select
+                        "posts"."id"
+                    from
+                        "posts"
+                    where
+                        "posts"."deleted_at" is not null
+                )
+EOD
+            ,
+            Comment::query()->hasByNonDependentSubquery(
+                'post',
+                function (Builder $query) {
+                    $query->onlyTrashed();
+                }
+            )->withTrashed()
+        );
+    }
+
     public function testMultiColumnRelation(): void
     {
         $this->expectException(DomainException::class);
@@ -713,5 +746,20 @@ EOD
         $this->expectExceptionMessage('Unsupported relation. Currently supported: HasOne, HasMany, BelongsTo, BelongsToMany, HasManyThrough, HasOneThrough, MorphOne, MorphMany and MorphToMany');
 
         Comment::query()->hasByNonDependentSubquery('commentable');
+    }
+
+    public function testReflectionCallable(): void
+    {
+        $this->assertInstanceOf(ReflectionFunction::class, ReflectionCallable::from('strpos'));
+        $this->assertInstanceOf(ReflectionFunction::class, ReflectionCallable::from(function () {}));
+
+        $this->assertInstanceOf(ReflectionMethod::class, ReflectionCallable::from('DateTime::createFromFormat'));
+        $this->assertInstanceOf(ReflectionMethod::class, ReflectionCallable::from([DateTime::class, 'createFromFormat']));
+        $this->assertInstanceOf(ReflectionMethod::class, ReflectionCallable::from([new DateTime(), 'format']));
+        $this->assertInstanceOf(ReflectionMethod::class, ReflectionCallable::from(new class() {
+            public function __invoke()
+            {
+            }
+        }));
     }
 }

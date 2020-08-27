@@ -89,7 +89,7 @@ class HasByNonDependentSubqueryMacro
                 function (Relation $query) use ($relationMethods, $whereInMethod, $constraints) {
                     // Apply optional constraints
                     if ($currentConstraints = \array_shift($constraints)) {
-                        $currentConstraints($query);
+                        $currentConstraints($this->adjustArgumentTypeOfOptionalConstraints($currentConstraints, $query));
                     }
                     // Apply relations nested under
                     if ($relationMethods) {
@@ -132,5 +132,24 @@ class HasByNonDependentSubqueryMacro
             $relation->where($keys->getQualifiedRelatedMorphType(), $keys->getRelatedMorphClass());
         }
         $this->query->{$whereInMethod}($keys->getQualifiedSourceKeyName(), $relation->getQuery());
+    }
+
+    /**
+     * From v1.1:
+     *   Relation will be automatically converted to Builder to prevent common mistakes on demand.
+     *
+     * @param  callable                                                                               $constraint
+     * @param  \Illuminate\Database\Eloquent\Relations\Relation                                       $relation
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Relations\Relation
+     */
+    protected function adjustArgumentTypeOfOptionalConstraints(callable $constraint, Relation $relation)
+    {
+        $reflection = ReflectionCallable::from($constraint);
+
+        return $reflection->getNumberOfParameters() > 0
+            && ($parameter = $reflection->getParameters()[0])->hasType()
+            && \is_a($parameter->getType()->getName(), Builder::class, true)
+            ? $relation->getQuery()
+            : $relation;
     }
 }
