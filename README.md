@@ -131,7 +131,7 @@ Builder::hasByNonDependentSubquery(
 | Feature | [`mpyw/eloquent-has-by-join`](https://github.com/mpyw/eloquent-has-by-join) | `mpyw/eloquent-has-by-non-dependent-subquery` |
 |:----|:---:|:---:|
 | Minimum Laravel version | 5.6 | 5.8 |
-| Argument of optional constraints | `Illuminate\Database\Eloquent\Builder` | `Illuminate\Database\Eloquent\Relations\*` |
+| Argument of optional constraints | `Illuminate\Database\Eloquent\Builder` | `Illuminate\Database\Eloquent\Relations\*`<br>(`Builder` can be also accepted by specifying argument type) |
 | [Compoships](https://github.com/topclaudy/compoships) support | ✅ | ❌ |
 | No subqueries | ✅ | ❌<br>(Performance depends on database optimizers) |
 | No table collisions | ❌<br>(Sometimes you need to give aliases) | ✅ |
