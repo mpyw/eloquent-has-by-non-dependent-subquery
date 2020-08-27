@@ -79,16 +79,16 @@ class HasByNonDependentSubqueryMacro
     protected function apply($relationMethod, string $whereInMethod, ?callable ...$constraints): Builder
     {
         // Extract dot-chained expressions
-        $relationMethods = is_string($relationMethod) ? explode('.', $relationMethod) : array_values($relationMethod);
+        $relationMethods = \is_string($relationMethod) ? \explode('.', $relationMethod) : \array_values($relationMethod);
 
         // Pick the first relation if exists
-        if ($currentRelationMethod = array_shift($relationMethods)) {
+        if ($currentRelationMethod = \array_shift($relationMethods)) {
             $this->applyForCurrentRelation(
                 $currentRelationMethod,
                 $whereInMethod,
                 function (Relation $query) use ($relationMethods, $whereInMethod, $constraints) {
                     // Apply optional constraints
-                    if ($currentConstraints = array_shift($constraints)) {
+                    if ($currentConstraints = \array_shift($constraints)) {
                         $currentConstraints($query);
                     }
                     // Apply relations nested under
@@ -113,7 +113,7 @@ class HasByNonDependentSubqueryMacro
     {
         // Unlike a JOIN-based approach, you don't need give table aliases.
         // Table names are never conflicted.
-        if (preg_match('/\s+as\s+/i', $relationMethod)) {
+        if (\preg_match('/\s+as\s+/i', $relationMethod)) {
             throw new DomainException('Table aliases are not supported.');
         }
 
