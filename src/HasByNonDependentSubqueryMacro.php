@@ -131,6 +131,10 @@ class HasByNonDependentSubqueryMacro
         if ($keys->needsPolymorphicRelatedConstraints()) {
             $relation->where($keys->getQualifiedRelatedMorphType(), $keys->getRelatedMorphClass());
         }
+        
+        // Add both qualified keys to WHERE clause
+        $relation->whereColumn($keys->getQualifiedRelatedKeyName(), $keys->getQualifiedSourceKeyName());
+        
         $this->query->{$whereInMethod}($keys->getQualifiedSourceKeyName(), $relation->getQuery());
     }
 
