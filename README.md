@@ -1,11 +1,11 @@
-# Eloquent Has By Non-dependent Subquery [![Build Status](https://travis-ci.com/mpyw/eloquent-has-by-non-dependent-subquery.svg?branch=master)](https://travis-ci.com/mpyw/eloquent-has-by-non-dependent-subquery) [![Coverage Status](https://coveralls.io/repos/github/mpyw/eloquent-has-by-non-dependent-subquery/badge.svg?branch=master)](https://coveralls.io/github/mpyw/eloquent-has-by-non-dependent-subquery?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mpyw/eloquent-has-by-non-dependent-subquery/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mpyw/eloquent-has-by-non-dependent-subquery/?branch=master)
+# Eloquent Has By Non-dependent Subquery [![Build Status](https://github.com/mpyw/eloquent-has-by-non-dependent-subquery/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/mpyw/eloquent-has-by-non-dependent-subquery/actions) [![Coverage Status](https://coveralls.io/repos/github/mpyw/eloquent-has-by-non-dependent-subquery/badge.svg?branch=master)](https://coveralls.io/github/mpyw/eloquent-has-by-non-dependent-subquery?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mpyw/eloquent-has-by-non-dependent-subquery/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mpyw/eloquent-has-by-non-dependent-subquery/?branch=master)
 
 Convert `has()` and `whereHas()` constraints to non-dependent subqueries.
 
 ## Requirements
 
-- PHP: ^7.3 || ^8.0
-- Laravel: ^6.0 || ^7.0 || ^8.0
+- PHP: `^7.3 || ^8.0`
+- Laravel: `^6.0 || ^7.0 || ^8.0`
 
 ## Installing
 
