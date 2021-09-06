@@ -13,6 +13,10 @@ Convert `has()` and `whereHas()` constraints to non-dependent subqueries.
 composer require mpyw/eloquent-has-by-non-dependent-subquery
 ```
 
+#### Suggestion
+
+You can install **[wimski/laravel-ide-helper-hook-eloquent-has-by-non-dependent-subquery](https://github.com/wimski/laravel-ide-helper-hook-eloquent-has-by-non-dependent-subquery)** to work with [Laravel IDE Helper](https://github.com/barryvdh/laravel-ide-helper).
+
 ## Motivation
 
 Suppose you have the following relationship:
