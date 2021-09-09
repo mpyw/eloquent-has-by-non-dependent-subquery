@@ -5,6 +5,7 @@ namespace Mpyw\EloquentHasByNonDependentSubquery;
 use DomainException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use ReflectionType;
 
 /**
  * Class HasByNonDependentSubqueryMacro
@@ -146,10 +147,42 @@ class HasByNonDependentSubqueryMacro
     {
         $reflection = ReflectionCallable::from($constraint);
 
-        return $reflection->getNumberOfParameters() > 0
+        $type = $reflection->getNumberOfParameters() > 0
             && ($parameter = $reflection->getParameters()[0])->hasType()
-            && \is_a($parameter->getType()->getName(), Builder::class, true)
-            ? $relation->getQuery()
-            : $relation;
+            ? $parameter->getType()
+            : null;
+
+        if (!$type) {
+            return $relation;
+        }
+
+        return $this->determineArgumentType($type, $relation);
+    }
+
+    /**
+     * @param  \ReflectionType                                                                        $type
+     * @param  \Illuminate\Database\Eloquent\Relations\Relation                                       $relation
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Relations\Relation
+     */
+    protected function determineArgumentType(ReflectionType $type, Relation $relation)
+    {
+        if ($type instanceof \ReflectionNamedType) {
+            return \is_a($type->getName(), Builder::class, true)
+                ? $relation->getQuery()
+                : $relation;
+        }
+
+        if ($type instanceof \ReflectionUnionType) {
+            /** @var ReflectionType $subType */
+            foreach ($type->getTypes() as $subType) {
+                $argument = $this->determineArgumentType($subType, $relation);
+
+                if ($argument instanceof Builder) {
+                    return $argument;
+                }
+            }
+        }
+
+        return $relation;
     }
 }
