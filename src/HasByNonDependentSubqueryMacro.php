@@ -5,6 +5,8 @@ namespace Mpyw\EloquentHasByNonDependentSubquery;
 use DomainException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use ReflectionNamedType;
+use ReflectionType;
 
 /**
  * Class HasByNonDependentSubqueryMacro
@@ -148,8 +150,49 @@ class HasByNonDependentSubqueryMacro
 
         return $reflection->getNumberOfParameters() > 0
             && ($parameter = $reflection->getParameters()[0])->hasType()
-            && \is_a($parameter->getType()->getName(), Builder::class, true)
-            ? $relation->getQuery()
-            : $relation;
+            && $this->mustExtractEloquentBuilder($parameter->getType())
+                ? $relation->getQuery()
+                : $relation;
+    }
+
+    /**
+     * @param  \ReflectionNamedType|\ReflectionType|\ReflectionUnionType $type
+     * @return bool
+     */
+    protected function mustExtractEloquentBuilder(ReflectionType $type): bool
+    {
+        /* @noinspection PhpElementIsNotAvailableInCurrentPhpVersionInspection */
+        return $type instanceof \ReflectionUnionType
+            ? $this->onlyIncludesBuilderType($type)
+            : $this->namedTypeIs($type, Builder::class);
+    }
+
+    /** @noinspection PhpElementIsNotAvailableInCurrentPhpVersionInspection */
+
+    /**
+     * @param  \ReflectionUnionType $types
+     * @return bool
+     */
+    protected function onlyIncludesBuilderType(\ReflectionUnionType $types): bool
+    {
+        $includesRelationType = false;
+        $includesBuilderType = false;
+
+        foreach ($types->getTypes() as $type) {
+            $includesRelationType = $includesRelationType || $this->namedTypeIs($type, Relation::class);
+            $includesBuilderType = $includesBuilderType || $this->namedTypeIs($type, Builder::class);
+        }
+
+        return !$includesRelationType && $includesBuilderType;
+    }
+
+    /**
+     * @param  \ReflectionNamedType $type
+     * @param  string               $class
+     * @return bool
+     */
+    protected function namedTypeIs(ReflectionNamedType $type, string $class): bool
+    {
+        return \is_a($type->getName(), $class, true);
     }
 }

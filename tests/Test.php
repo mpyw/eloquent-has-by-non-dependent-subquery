@@ -724,6 +724,15 @@ EOD
         );
     }
 
+    public function testAcceptUnionArgument(): void
+    {
+        if (version_compare(phpversion(), '8.0', '>=')) {
+            include __DIR__ . '/includes/test_accept_union_argument.php';
+        } else {
+            $this->markTestSkipped('Union types are only supported in PHP >= 8.0');
+        }
+    }
+
     public function testMultiColumnRelation(): void
     {
         $this->expectException(DomainException::class);

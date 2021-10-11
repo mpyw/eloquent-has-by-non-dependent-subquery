@@ -120,6 +120,15 @@ Additional `callable` constraints for relations that take **`Illuminate\Database
 Builder::hasByNonDependentSubquery('comments', fn (HasMany $query) => $query->withTrashed())
 ```
 
+If you are using a union type as of PHP 8.0, the order of types does not matter.
+
+```php
+// This will work
+Builder::hasByNonDependentSubquery('comments', fn (HasMany|Comment $query) => $query->withTrashed())
+// and so will this
+Builder::hasByNonDependentSubquery('comments', fn (Comment|HasMany $query) => $query->withTrashed())
+```
+
 The first closure corresponds to `comments` and the second one corresponds to `author`.
 
 ```php
