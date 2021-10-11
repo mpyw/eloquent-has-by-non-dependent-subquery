@@ -163,8 +163,8 @@ class HasByNonDependentSubqueryMacro
     {
         /* @noinspection PhpElementIsNotAvailableInCurrentPhpVersionInspection */
         return $type instanceof \ReflectionUnionType
-            ? $this->judgeUnionType($type)
-            : $this->judgeNamedType($type, Builder::class);
+            ? $this->onlyIncludesBuilderType($type)
+            : $this->namedTypeIs($type, Builder::class);
     }
 
     /** @noinspection PhpElementIsNotAvailableInCurrentPhpVersionInspection */
@@ -173,14 +173,14 @@ class HasByNonDependentSubqueryMacro
      * @param  \ReflectionUnionType $types
      * @return bool
      */
-    protected function judgeUnionType(\ReflectionUnionType $types): bool
+    protected function onlyIncludesBuilderType(\ReflectionUnionType $types): bool
     {
         $includesRelationType = false;
         $includesBuilderType = false;
 
         foreach ($types->getTypes() as $type) {
-            $includesRelationType = $includesRelationType || $this->judgeNamedType($type, Relation::class);
-            $includesBuilderType = $includesBuilderType || $this->judgeNamedType($type, Builder::class);
+            $includesRelationType = $includesRelationType || $this->namedTypeIs($type, Relation::class);
+            $includesBuilderType = $includesBuilderType || $this->namedTypeIs($type, Builder::class);
         }
 
         return !$includesRelationType && $includesBuilderType;
@@ -191,7 +191,7 @@ class HasByNonDependentSubqueryMacro
      * @param  string               $class
      * @return bool
      */
-    protected function judgeNamedType(ReflectionNamedType $type, string $class): bool
+    protected function namedTypeIs(ReflectionNamedType $type, string $class): bool
     {
         return \is_a($type->getName(), $class, true);
     }
