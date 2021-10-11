@@ -5,6 +5,7 @@ namespace Mpyw\EloquentHasByNonDependentSubquery;
 use DomainException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use ReflectionNamedType;
 use ReflectionType;
 
 /**
@@ -147,42 +148,51 @@ class HasByNonDependentSubqueryMacro
     {
         $reflection = ReflectionCallable::from($constraint);
 
-        $type = $reflection->getNumberOfParameters() > 0
+        return $reflection->getNumberOfParameters() > 0
             && ($parameter = $reflection->getParameters()[0])->hasType()
-            ? $parameter->getType()
-            : null;
-
-        if (!$type) {
-            return $relation;
-        }
-
-        return $this->determineArgumentType($type, $relation);
+            && $this->mustExtractEloquentBuilder($parameter->getType())
+                ? $relation->getQuery()
+                : $relation;
     }
 
     /**
-     * @param  \ReflectionType                                                                        $type
-     * @param  \Illuminate\Database\Eloquent\Relations\Relation                                       $relation
-     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Relations\Relation
+     * @param  \ReflectionNamedType|\ReflectionType|\ReflectionUnionType $type
+     * @return bool
      */
-    protected function determineArgumentType(ReflectionType $type, Relation $relation)
+    protected function mustExtractEloquentBuilder(ReflectionType $type): bool
     {
-        if ($type instanceof \ReflectionNamedType) {
-            return \is_a($type->getName(), Builder::class, true)
-                ? $relation->getQuery()
-                : $relation;
+        /* @noinspection PhpElementIsNotAvailableInCurrentPhpVersionInspection */
+        return $type instanceof \ReflectionUnionType
+            ? $this->judgeUnionType($type)
+            : $this->judgeNamedType($type, Builder::class);
+    }
+
+    /** @noinspection PhpElementIsNotAvailableInCurrentPhpVersionInspection */
+
+    /**
+     * @param  \ReflectionUnionType $types
+     * @return bool
+     */
+    protected function judgeUnionType(\ReflectionUnionType $types): bool
+    {
+        $includesRelationType = false;
+        $includesBuilderType = false;
+
+        foreach ($types->getTypes() as $type) {
+            $includesRelationType = $includesRelationType || $this->judgeNamedType($type, Relation::class);
+            $includesBuilderType = $includesBuilderType || $this->judgeNamedType($type, Builder::class);
         }
 
-        if ($type instanceof \ReflectionUnionType) {
-            /** @var ReflectionType $subType */
-            foreach ($type->getTypes() as $subType) {
-                $argument = $this->determineArgumentType($subType, $relation);
+        return !$includesRelationType && $includesBuilderType;
+    }
 
-                if ($argument instanceof Builder) {
-                    return $argument;
-                }
-            }
-        }
-
-        return $relation;
+    /**
+     * @param  \ReflectionNamedType $type
+     * @param  string               $class
+     * @return bool
+     */
+    protected function judgeNamedType(ReflectionNamedType $type, string $class): bool
+    {
+        return \is_a($type->getName(), $class, true);
     }
 }
