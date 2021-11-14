@@ -27,8 +27,10 @@
     },
     "require-dev": {
         "orchestra/testbench": "*",
+        "orchestra/testbench-core": "^4.9 || ^5.9 || >=6.6",
+        "phpunit/phpunit": ">=9.5",
         "nilportugues/sql-query-formatter": "^1.2.2",
-        "awobaz/compoships": "^2.0"
+        "awobaz/compoships": "^2.0.4"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
