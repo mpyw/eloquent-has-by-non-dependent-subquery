@@ -12,25 +12,25 @@ class EloquentHasByNonDependentSubqueryServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Builder::macro('hasByNonDependentSubquery', function (...$args) {
+        Builder::macro('hasByNonDependentSubquery', function ($relationMethod, ?callable ...$constraints): Builder {
             /** @var \Illuminate\Database\Eloquent\Builder $query */
             $query = $this;
-            return (new HasByNonDependentSubqueryMacro($query))->has(...$args);
+            return (new HasByNonDependentSubqueryMacro($query))->has($relationMethod, ...$constraints);
         });
-        Builder::macro('orHasByNonDependentSubquery', function (...$args) {
+        Builder::macro('orHasByNonDependentSubquery', function ($relationMethod, ?callable ...$constraints): Builder {
             /** @var \Illuminate\Database\Eloquent\Builder $query */
             $query = $this;
-            return (new HasByNonDependentSubqueryMacro($query))->orHas(...$args);
+            return (new HasByNonDependentSubqueryMacro($query))->orHas($relationMethod, ...$constraints);
         });
-        Builder::macro('doesntHaveByNonDependentSubquery', function (...$args) {
+        Builder::macro('doesntHaveByNonDependentSubquery', function ($relationMethod, ?callable ...$constraints): Builder {
             /** @var \Illuminate\Database\Eloquent\Builder $query */
             $query = $this;
-            return (new HasByNonDependentSubqueryMacro($query))->doesntHave(...$args);
+            return (new HasByNonDependentSubqueryMacro($query))->doesntHave($relationMethod, ...$constraints);
         });
-        Builder::macro('orDoesntHaveByNonDependentSubquery', function (...$args) {
+        Builder::macro('orDoesntHaveByNonDependentSubquery', function ($relationMethod, ?callable ...$constraints): Builder {
             /** @var \Illuminate\Database\Eloquent\Builder $query */
             $query = $this;
-            return (new HasByNonDependentSubqueryMacro($query))->orDoesntHave(...$args);
+            return (new HasByNonDependentSubqueryMacro($query))->orDoesntHave($relationMethod, ...$constraints);
         });
     }
 }
