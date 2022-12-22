@@ -4,6 +4,8 @@ Convert `has()` and `whereHas()` constraints to non-dependent subqueries.
 
 **NOTICE: Postgres' optimizer is very smart and covers JOIN optimization for dependent (correlated) subqueries. Therefore, this library is mainly targeted at MySQL which has a poor optimizer.**
 
+**UPDATE: [MySQL's optimizer has also been updated in version `8.0.16`](https://zenn.dev/yumemi_inc/articles/e8ca9535dba0b6) to include optimizations similar to PostgreSQL. This library is no longer maintained.**
+
 ## Requirements
 
 - PHP: `^7.3 || ^8.0`
